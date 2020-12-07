@@ -1,16 +1,17 @@
 function [highRes, residuals] = solveCVX(A, b, G, lambda, lp, lowResSize)
 
 n = size(A,2);
+m = size(G,1);
 switch lp
     case 1
         cvx_begin quiet
             variable x(n)
-            minimize( sum_square( A * x - b ) + lambda * norm(G * x, 1 ))
+            minimize( sum_square( A * x - b ) + lambda/m*n * norm(G * x, 1 ))
         cvx_end
     case 2
         cvx_begin quiet
             variable x(n)
-            minimize( sum_square( A * x - b ) + lambda * sum_square(G * x ))
+            minimize( sum_square( A * x - b ) + lambda/m*n * sum_square(G * x ))
         cvx_end
     otherwise 
         error('not implemented')
