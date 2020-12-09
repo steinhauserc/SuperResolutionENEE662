@@ -1,5 +1,5 @@
 function [ avgimage ] = averageimage(images, offsets,im)
-
+%Creates an average image using the LR images and their offsets.
 padRatio = 0.2;
 numImages=length(images);
 workingRowSub = round(0.5 * padRatio * size(im, 1)) : round((1 - 0.5 * padRatio) * size(im, 1));
