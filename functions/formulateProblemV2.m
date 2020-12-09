@@ -1,6 +1,6 @@
 function [A , b, G] = formulateProblemV2(lowRes, offsets, scaleFactor, psfSigma)
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
+%Formulates the much needed A,b and G matrices, so, that the problem can be formulated as a linear problem and solved using CVX and Quadprog
+%For further explaination refer to the reports 
 
 lowResSize = size(lowRes{1});
 highResSize = lowResSize * scaleFactor + 1;
