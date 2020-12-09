@@ -1,6 +1,6 @@
 function [highRes, residuals] = solveQuadprog(A, b, G, lambda, lp, lowResSize)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+%The function reformulates the linear problem as a quadratic problem and solves it using Quadprog.
+%   For further explaination please refer to the report.
     % make sure input is sparse
     A = sparse(A);
     G = sparse(G);
