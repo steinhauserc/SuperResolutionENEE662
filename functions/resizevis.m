@@ -1,12 +1,21 @@
-function [avgerror] = visualiseavg(avgimg,croppedOriginal,highResL1,highResL2)
+function [resizerror] = resizevis(images,croppedOriginal,highResL1,highResL2)
 %visualiseavg Plots the Average image and gives the MSE for the avgimg.
 %   Detailed explanation goes herR
-    furthercropped=croppedOriginal(2:end-1,2:end-1);
-    avgerror= mean((avgimg(:) - furthercropped(:)).^2);
+    
+    numImages=length(images);
+    for i=1:numImages
+        current=imresize(images{i},[size(croppedOriginal)]);
+        errormat(i)=mean((current(:) - croppedOriginal(:)).^2);
+    end
+
+    [resizerror,ind]= min(errormat);
+    resizeimg=imresize(images{i},[size(croppedOriginal)]);
+    
+    
     figure()
     subplot(2,2,3)
-    imagesc(avgimg, [0, 1])
-    title(sprintf('Average Image (mse = %.1d)', avgerror))
+    imagesc(resizeimg, [0, 1])
+    title(sprintf('Image using imresize (mse = %.1d)', resizerror))
     colormap(gray)
     axis image
 
