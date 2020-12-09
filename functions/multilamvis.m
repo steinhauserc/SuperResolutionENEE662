@@ -15,25 +15,39 @@ end
 
 %Qualitative comparison L-1 vs L-2
 figure
-for i=1:iter
-    subplot(iter,2,2*i-1)
-    imagesc(L1mat{i}, [0,1])
-    title(sprintf('L-1 regularization Lamda=%.1d (mse = %.1d)', lamda(i),errorL1(i)))
+n=0
+itermax=length(L1mat);
+factor=itermax/3;
+m=itermax/factor;
+
+for i=1:factor:itermax
+    n=n+1;
+    subplot(2,m,n)
+    imagesc(L1mat{i})
+    title(sprintf('L-1 reg Lamda=%.3f (mse = %.1d)', double(lamda(i)),errorL1(i)))
     axis image
     
-    subplot(iter,2,2*i)
-    imagesc(L2mat{i}, [0,1])
-    title(sprintf('L-2 regularizationLamda=%.1d (mse = %.1d)',lamda(i), errorL2(i)))
+    subplot(2,m,m+n)
+    imagesc(L2mat{i})
+    colormap(gray)
+    title(sprintf('L-2 reg Lamda=%.3f (mse = %.1d)',double(lamda(i)), errorL2(i)))
     axis image
 end
+
 suptitle('Qualitiative comparison L-1 vs L-2')
 %Plotting the MSE vs lamda plot
+    [minL1,locL1]= min(errorL1);
+    [minL2,locL2]=min(errorL2);
     figure 
-    plot(lamda,errorL1)
+    semilogx(lamda,errorL1,'-o')
     hold on
-    plot(lamda,errorL2)
+    semilogx(lamda,errorL2,'-o')
+    hold on
+    scatter(lamda(locL1),minL1,'r*')
+    hold on
+    scatter(lamda(locL2),minL2,'b*')
     xlabel('lamda')
-    ylabel('error')
-    legend('mse for L1','mse for L2')
+    ylabel('MSE')
+    legend('MSE for L1','mse for L2','min L1','min L2')
 end
 

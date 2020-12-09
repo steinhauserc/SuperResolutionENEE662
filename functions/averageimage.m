@@ -24,5 +24,5 @@ for i = 1 : numImages
     avgimage=avgimage+avgimg{i};
 end
 
-avgimage=avgimage/4;
+avgimage=avgimage/numImages;
 end

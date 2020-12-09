@@ -5,14 +5,15 @@ function [L1mat,L2mat,lam] = multilamsol(A,b,G,lowResSize,max,itermax)
 %   iterations you want the cvx algorithm to process.
 
 %Generating linearly spaced lamdas
-lam=logspace(max,5,itermax);
+lam=logspace(max,-4,itermax);
 
 
 for i=1:itermax
-    [highResL1, ~] = solveCVX(A, b, G, lam(i), 1, lowResSize);
-    [highResL2, ~] = solveCVX(A, b, G, lam(i), 2, lowResSize);
+    [highResL1, ~] = solveQuadprog(A, b, G, lam(i), 1, lowResSize);
+    [highResL2, ~] = solveQuadprog(A, b, G, lam(i), 2, lowResSize);
     L1mat{i}=highResL1;
     L2mat{i}=highResL2;
     fprintf('Iteration %d is complete\n',i)
+end
 end
 
