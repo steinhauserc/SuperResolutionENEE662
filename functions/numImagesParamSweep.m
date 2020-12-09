@@ -1,7 +1,7 @@
 function [output, croppedOriginal, images] = numImagesParamSweep(im, numImagesVec, ...
                     blurSigma, scaleFactor, lambdaL1, lambdaL2)
-%UNTITLED3 Summary of this function goes here
-%   Detailed explanation goes here
+%Generates data needed for creating figures for studying the effect of number of LR image on the Quality of the output HR image.
+%Refer to the discussion and result section of the report.
             
 [ images, offsets, croppedOriginal ] = SynthDataset(im, max(numImagesVec), blurSigma, scaleFactor);
 

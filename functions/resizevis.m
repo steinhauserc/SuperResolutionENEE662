@@ -1,6 +1,6 @@
 function [resizerror] = resizevis(images,croppedOriginal,highResL1,highResL2)
-%visualiseavg Plots the Average image and gives the MSE for the avgimg.
-%   Detailed explanation goes herR
+%resizevis generates figures that help compare the results of Super-resolution to 'imresize' a function from MATLAB's image tooolbox.
+%No detailed explaination needed.
     
     numImages=length(images);
     for i=1:numImages

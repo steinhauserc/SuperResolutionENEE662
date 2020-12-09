@@ -1,4 +1,6 @@
 function [highRes, residuals] = solveCVX(A, b, G, lambda, lp, lowResSize)
+%Implements the super resolution CVX
+%  lp - parameter that determines the regression method.
 
 n = size(A,2);
 m = size(G,1);
