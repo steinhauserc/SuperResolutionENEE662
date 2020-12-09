@@ -4,23 +4,18 @@ close all
 
 setupPaths
 %% Prepare the reference image
-im = imread('exampleImage.png');
+im = imread('campuspicture.jpg');
 im = rgb2gray(im);
-im = imresize(im, [ 128 128 ]);
 im = im2double(im);
-im = 1 - im;
+im = im;
 %% Simulate the low-resolution images
-numImages = 4;
+numImages = 100;
 blurSigma = 2;
 scaleFactor = 2;
 
 [ images offsets croppedOriginal ] = SynthDataset(im, numImages, blurSigma, scaleFactor);
 %%
 [A , b, G] = formulateProblemV2(images, offsets, scaleFactor, blurSigma );
-
-%% Solve using average interpoloation
-
-avgimg=averageimage(images, offsets,im);
 
 %% solve with gradient descent for comparison
 
@@ -32,18 +27,10 @@ HR = GradientDescent(lhs, rhs, initialGuess);
 highResGradDesc = reshape(HR, sqrt(numel(HR)), sqrt(numel(HR)));
 
 %%
-[highResL2, residualsL2] = solveQuadprog(A, b, G, 1e-2, 2, size(images{1}));
+[highResL2, residualsL2] = solveQuadprog(A, b, G, 3e-3, 2, size(images{1}));
 
 %%
-[highResL1, residualsL1] = solveQuadprog(A, b, G, 1e-3, 1, size(images{1}));
-
-%% Generate data for lamda vs MSE plot
-
-max_lam=1;
-itermax=4;
-
-[L1mat,L2mat,lam]=multilamsol(A,b,G,size(images{1}),max_lam,itermax);
-
+[highResL1, residualsL1] = solveQuadprog(A, b, G, 2e-3, 1, size(images{1}));
 
 %%
 figure
@@ -65,9 +52,25 @@ axis image
 subplot(2,2,4)
 imagesc(highResL1, [0, 1])
 title(sprintf('L-1 gradient regularization (mse = %.1d)', mean((highResL1(:) - croppedOriginal(:)).^2)))
+colorbar
 axis image
-%% Visulaise the lamda vs MSE plot as well as the High res images generated at each lamda
+%% Visulaise the effect of lamda on MSE
+
+max=1; %specify keeping in mind max value of lamda = 10^{max}
+itermax=10*3; %keep it a multiple of 3 so that it can be easily displayed on the plot
+
+[L1mat,L2mat,lam]=multilamsol(A,b,G,size(images{1}),max,itermax);
 [errorL1,errorL2]=multilamvis(L1mat,L2mat,croppedOriginal,lam);
 
-%% Visulise the average image as well as calculate the MSE error
-avgerror= visualiseavg(avgimg,croppedOriginal)
+%% Compare the effectiveness of l-1 and l-2 vs the average image
+
+avgimg=averageimage(images, offsets,im);
+avgerror=visualiseavg(avgimg,croppedOriginal,highResL1,highResL2)
+
+%% Compare the effectiveness of l-1 and l-2 vs the imresize
+resizerror = resizevis(images,croppedOriginal,highResL1,highResL2)
+%% Plot to compare the numimages vs MSE for average image
+minnumimages=8;
+maxnumimages=100;
+iter=24;
+img=numavg(highResL1,highResL2,croppedOriginal,maxnumimages,minnumimages,iter,im);
